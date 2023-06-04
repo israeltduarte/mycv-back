@@ -12,13 +12,13 @@ import java.util.List;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@RequestMapping(value = "/mycv")
+@RequestMapping(value = "/mycv/infos")
 public class InfoController {
 
     @Autowired
     private InfoService infoService;
 
-    @GetMapping("/infos")
+    @GetMapping
     public ResponseEntity<List<Info>> getInfo() {
 
         List<Info> infosList = infoService.getAllInfos();
@@ -26,20 +26,36 @@ public class InfoController {
         return ResponseEntity.status(HttpStatus.OK).body(infosList);
     }
 
-    @GetMapping("/infos/{id}")
-    public ResponseEntity<Info> getInfo(@PathVariable String id) {
+    @GetMapping("/{id}")
+    public ResponseEntity<Info> getInfoById(@PathVariable String id) {
 
         Info info = infoService.getInfo(id);
 
         return ResponseEntity.status(HttpStatus.OK).body(info);
     }
 
-    @PostMapping("/infos")
+    @PostMapping
     public ResponseEntity<Info> addInfo(@RequestBody InfoRequest infoRequest) {
 
         Info info = infoService.addInfo(infoRequest);
 
         return ResponseEntity.status(HttpStatus.OK).body(info);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteInfoById(@PathVariable String id) {
+
+        infoService.deleteInfoById(id);
+
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @DeleteMapping
+    public ResponseEntity<Void> deleteAllInfos() {
+
+        infoService.deleteAllInfos();
+
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
 }

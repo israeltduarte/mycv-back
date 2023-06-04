@@ -1,12 +1,16 @@
 package br.com.isertech.mycv.mycvback.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Location {
 
-    private final String city;
-    private final String state;
-    private final String country;
+    private String city;
+    private String state;
+    private String country;
 
 }

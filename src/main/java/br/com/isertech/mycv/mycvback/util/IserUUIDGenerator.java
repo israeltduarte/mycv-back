@@ -19,17 +19,17 @@ public class IserUUIDGenerator implements IdentifierGenerator, Configurable {
 
     @Override
     public Serializable generate(SharedSessionContractImplementor session, Object object) {
-        return String.format("%s_%s_%s", prefix, originPrefix, UUID.randomUUID());
+        return String.format("%s_%s_%s", originPrefix, prefix, UUID.randomUUID());
     }
 
     @Override
     public void configure(Type type, Properties params, ServiceRegistry serviceRegistry) {
         prefix = String.join("_", params.getProperty("prefix"));
-        originPrefix = getProperty(serviceRegistry, "originPrefix");
+        originPrefix = getProperty(serviceRegistry);
     }
 
-    private String getProperty(ServiceRegistry serviceRegistry, String property) {
-        return serviceRegistry.getService(ConfigurationService.class).getSetting(property, String.class, "");
+    private String getProperty(ServiceRegistry serviceRegistry) {
+        return serviceRegistry.getService(ConfigurationService.class).getSetting("originPrefix", String.class, "");
     }
 
     @Override

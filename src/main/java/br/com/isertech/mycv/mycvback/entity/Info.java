@@ -2,10 +2,8 @@ package br.com.isertech.mycv.mycvback.entity;
 
 import br.com.isertech.mycv.mycvback.dto.Location;
 import br.com.isertech.mycv.mycvback.dto.Name;
-import jakarta.persistence.Embedded;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import br.com.isertech.mycv.mycvback.util.IserUUIDGenerator;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,6 +13,8 @@ import org.hibernate.annotations.Parameter;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Data
@@ -30,14 +30,20 @@ public class Info implements Serializable {
     @GeneratedValue(generator = "iser-uuid-generator")
     @GenericGenerator(
             name = "iser-uuid-generator",
-            strategy = "br.com.isertech.mycv.mycvback.util.IserUUIDGenerator",
-            parameters = @Parameter(name = "prefix", value = "Info")
+            type = IserUUIDGenerator.class,
+            parameters = @Parameter(name = "prefix", value = "INFO")
     )
     private String id;
-
     @Embedded
     private Name name;
-
     @Embedded
     private Location location;
+    private String mainPosition;
+    private LocalDate birthdate;
+    private String email;
+    private String contact;
+    @ElementCollection(fetch = FetchType.EAGER)
+    private List<String> socialMedia;
+    @Column(length = 1024)
+    private String introduction;
 }

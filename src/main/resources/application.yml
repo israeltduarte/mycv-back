@@ -1,0 +1,40 @@
+
+spring:
+  application:
+    name: mycv-back-service
+#  cloud:
+#    openfeign:
+#      client:
+#        config:
+#          user-client:
+#            connectTimeout: 5000
+#            readTimeout: 5000
+#            loggerLevel: full
+#  data:
+#    web:
+#      pageable:
+#        page-parameter: 0
+#        default-page-size: 50
+  datasource:
+    url: jdbc:postgresql://localhost:5432/mycvdb
+    username: postgres
+    password: postgres
+  jackson:
+    default-property-inclusion: non_null
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      originPrefix: MYCV
+    open-in-view: false
+  output:
+    ansi:
+      enabled: ALWAYS
+
+logging:
+  level:
+    br.com.isertech.mycv.mycbback: TRACE
+    root: INFO
+    org.springframework.web: DEBUG
+    org.hibernate: INFO

@@ -6,6 +6,7 @@ import br.com.isertech.mycv.mycvback.entity.Info;
 import br.com.isertech.mycv.mycvback.error.exception.InfoNotFoundException;
 import br.com.isertech.mycv.mycvback.repository.InfoRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +19,9 @@ public class InfoService {
     @Autowired
     private InfoRepository infoRepository;
 
+    @Autowired
+    private ModelMapper mapper;
+
     public List<Info> getAllInfos() {
 
         List<Info> infosList = infoRepository.findAll();
@@ -29,8 +33,7 @@ public class InfoService {
 
     public Info getInfo(String id) {
 
-        Info info = infoRepository.findById(id)
-                .orElseThrow(() -> new InfoNotFoundException(Messages.INFO_NOT_FOUND.concat(id)));
+        Info info = infoRepository.findById(id).orElseThrow(() -> new InfoNotFoundException(Messages.INFO_NOT_FOUND.concat(id)));
 
         log.info("InfoService#getInfo - Info={}", info);
 
@@ -39,28 +42,31 @@ public class InfoService {
 
     public Info addInfo(InfoRequest infoRequest) {
 
-        Info info = Info.builder()
-                .name(infoRequest.getName())
-                .location(infoRequest.getLocation())
-                .mainPosition(infoRequest.getMainPosition())
-                .birthdate(infoRequest.getBirthdate())
-                .email(infoRequest.getEmail())
-                .contact(infoRequest.getContact())
-                .socialMedia(infoRequest.getSocialMedia())
-                .introduction(infoRequest.getIntroduction())
-                .build();
-
+        Info info = new Info();
+        mapper.map(infoRequest, info);
         info = infoRepository.save(info);
 
-        log.info("InfoService#addInfo - Info successfully saved. Info={}", info);
+        log.info("InfoService#addInfo - ".concat(Messages.INFO_CREATED.concat(info.toString())));
+
+        return info;
+    }
+
+    public Info updateInfoById(InfoRequest infoRequest, String id) {
+
+        Info info = infoRepository.findById(id).orElseThrow(() -> new InfoNotFoundException(Messages.INFO_NOT_FOUND.concat(id)));
+        mapper.map(infoRequest, info);
+        info.setId(id);
+        info = infoRepository.save(info);
+
+        log.info("InfoService#updateInfoById - ".concat(Messages.INFO_UPDATED.concat(id)));
 
         return info;
     }
 
     public void deleteInfoById(String id) {
 
-        infoRepository.findById(id).orElseThrow(() -> new InfoNotFoundException(Messages.INFO_NOT_FOUND.concat(id)));
-        infoRepository.deleteById(id);
+        Info info = infoRepository.findById(id).orElseThrow(() -> new InfoNotFoundException(Messages.INFO_NOT_FOUND.concat(id)));
+        infoRepository.delete(info);
 
         log.info("InfoService#deleteInfoById - ".concat(Messages.INFO_DELETED.concat(id)));
     }

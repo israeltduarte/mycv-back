@@ -1,9 +1,11 @@
 package br.com.isertech.mycv.mycvback.entity;
 
-import br.com.isertech.mycv.mycvback.dto.Location;
-import br.com.isertech.mycv.mycvback.dto.Name;
+
 import br.com.isertech.mycv.mycvback.util.IserUUIDGenerator;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,14 +17,13 @@ import javax.validation.constraints.NotBlank;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.List;
 
 @Entity
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Info implements Serializable {
+public class Certification implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -32,24 +33,11 @@ public class Info implements Serializable {
     @GenericGenerator(
             name = "iser-uuid-generator",
             type = IserUUIDGenerator.class,
-            parameters = @Parameter(name = "prefix", value = "INFO")
+            parameters = @Parameter(name = "prefix", value = "CERT")
     )
     private String id;
-    @Embedded
-    private Name name;
-    @Embedded
-    private Location location;
     @NotBlank
-    private String mainPosition;
-    private LocalDate birthdate;
-    @NotBlank
-    private String email;
-    private String contact;
-    @ElementCollection(fetch = FetchType.EAGER)
-    private List<String> socialMedia;
-    @Column(length = 1024)
-    private String introduction;
+    private String description;
+    private String date;
 
-    @OneToOne
-    private Curriculum curriculum;
 }

@@ -49,9 +49,12 @@ public class CurriculumService {
 
     public Curriculum updateById(CurriculumRequest curriculumRequest, String id) {
 
-        Curriculum curriculum = curriculumRepository.findById(id).orElseThrow(() -> new CurriculumNotFoundException(Messages.CURRICULUM_NOT_FOUND.concat(id)));
-        curriculum = CurriculumTransformer.fromCurriculumRequest(curriculumRequest);
-        curriculum.setId(id);
+        Curriculum curriculum = CurriculumTransformer.fromCurriculumRequest(curriculumRequest);
+
+        Curriculum curriculumInstance = curriculumRepository.findById(id).orElseThrow(() -> new CurriculumNotFoundException(Messages.CURRICULUM_NOT_FOUND.concat(id)));
+
+        curriculum.setId(curriculumInstance.getId());
+
         curriculum = curriculumRepository.save(curriculum);
 
         log.info("CurriculumService#updateById - ".concat(Messages.CURRICULUM_UPDATED.concat(id)));
